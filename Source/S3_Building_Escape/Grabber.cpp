@@ -2,6 +2,7 @@
 
 #include "Grabber.h"
 #include "Gameframework/Actor.h"
+#include "DrawDebugHelpers.h"
 
 #define OUT		// does nothing, just a label for out parameters
 
@@ -37,7 +38,13 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		OUT playerViewPointLocation,
 		OUT playerViewPointRotation
 	);
-	UE_LOG(LogTemp, Warning, TEXT("Location: %s, Rotation: %s"), *playerViewPointLocation.ToString(), *playerViewPointRotation.ToString())
+	//UE_LOG(LogTemp, Warning, TEXT("Location: %s, Rotation: %s"), *playerViewPointLocation.ToString(), *playerViewPointRotation.ToString())
+
+	// Draw a red trace
+	FVector lineTraceEnd = playerViewPointLocation + 
+		(playerViewPointRotation.Vector() * reach);
+	DrawDebugLine(GetWorld(), playerViewPointLocation, lineTraceEnd,
+		FColor(255, 0, 0), false, 0.f, 0.f, 10.f);
 
 	// Raycast out to reach distance
 

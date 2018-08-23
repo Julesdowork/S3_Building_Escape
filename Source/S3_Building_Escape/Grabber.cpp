@@ -64,7 +64,5 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Line trace hit: %s"), *(actorHit->GetName()))
 	}
-
-	lk; asdjffopiqwajeporfijqwpdlifnmaslk; dfjals; djf; lasjdf; qjasd; lfkjqweirjq2p908ujr02981jero;
 }
 

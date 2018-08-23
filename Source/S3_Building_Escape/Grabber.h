@@ -31,4 +31,5 @@ private:
 	UPhysicsHandleComponent* physicsHandle = nullptr;
 	UInputComponent* inputComponent = nullptr;
 	void Grab();			// raycast and grab what's in reach
+	void Release();			// called when grab is released
 };

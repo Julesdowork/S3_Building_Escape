@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
 #include "Public/CollisionQueryParams.h"
+#include "Components/PrimitiveComponent.h"
 
 #define OUT		// does nothing, just a label for out parameters
 
@@ -57,16 +58,25 @@ void UGrabber::Grab()
 	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"));
 
 	/// Line trace and see if we reach any actors with physics body collision channel set
-	GetFirstPhysicsBodyInReach();
+	auto hitResult = GetFirstPhysicsBodyInReach();
+	auto componentToGrab = hitResult.GetComponent();
+	auto actorHit = hitResult.GetActor();
 
 	/// If we hit something then attach a physics handle
-		// TODO attach physics handle
+	if (actorHit)
+	{
+		physicsHandle->GrabComponentAtLocationWithRotation(componentToGrab, NAME_None,
+			componentToGrab->GetOwner()->GetActorLocation(),
+			componentToGrab->GetOwner()->GetActorRotation()
+		);
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *componentToGrab->GetOwner()->GetName())
+	}
 }
 
 void UGrabber::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab released"));
-	// TODO release physics handle
+	physicsHandle->ReleaseComponent();
 }
 
 // Called every frame
@@ -74,8 +84,24 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	/// Get player viewpoint this tick
+	FVector playerViewPointLocation;
+	FRotator playerViewPointRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT playerViewPointLocation,
+		OUT playerViewPointRotation
+	);
+
+	FVector lineTraceEnd = playerViewPointLocation +
+		(playerViewPointRotation.Vector() * reach);
+
 	// if physics handle is attached
+	if (physicsHandle->GrabbedComponent)
+	{
 		// move the object we're holding
+		physicsHandle->SetTargetLocation(lineTraceEnd);
+		UE_LOG(LogTemp, Warning, TEXT("Moving object"))
+	}
 }
 
 const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
@@ -108,5 +134,5 @@ const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 		UE_LOG(LogTemp, Warning, TEXT("Line trace hit: %s"), *(actorHit->GetName()))
 	}
 
-	return FHitResult();
+	return hit;
 }

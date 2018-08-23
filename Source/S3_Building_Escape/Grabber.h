@@ -30,9 +30,25 @@ private:
 	float reach = 100.f;	// how far can player reach in cm
 	UPhysicsHandleComponent* physicsHandle = nullptr;
 	UInputComponent* inputComponent = nullptr;
-	void Grab();			// raycast and grab what's in reach
-	void Release();			// called when grab is released
-	void FindPhysicsHandleComponent();	// find (assumed) attached physics handle
-	void SetupInputComponent();			// find (assumed) attached input component
-	const FHitResult GetFirstPhysicsBodyInReach(); // return hit for first physics body in reach
+
+	// raycast and grab what's in reach
+	void Grab();
+
+	// called when grab is released
+	void Release();
+
+	// find (assumed) attached physics handle
+	void FindPhysicsHandleComponent();
+
+	// find (assumed) attached input component
+	void SetupInputComponent();
+
+	// return hit for first physics body in reach
+	const FHitResult GetFirstPhysicsBodyInReach();
+
+	// returns current start of reach line
+	FVector GetReachLineStart();
+
+	// returns current end of reach line
+	FVector GetReachLineEnd();
 };

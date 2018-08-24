@@ -36,10 +36,12 @@ private:
 	ATriggerVolume* pressurePlate;
 
 	AActor * owner;
-	AActor* actorThatOpens; // Remember Pawn inherits from AActor
 
 	UPROPERTY(EditAnywhere)
 	float doorCloseDelay = 0.5f;
 
 	float lastDoorOpenTime;
+
+	// returns total mass in kg
+	float GetTotalMassOfActors();
 };
